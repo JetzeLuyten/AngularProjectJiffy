@@ -1,1 +1,9 @@
-<p>services works!</p>
+<article *ngIf="service">
+    <h1>{{service.title}}</h1>
+    <h4>{{service.type}}</h4>
+    <h4>{{service.time}}</h4>
+    <p>{{service.description}}</p>
+    <footer>
+        <p>Request made by {{service.author}} on {{service.publishDate}}</p>
+    </footer>
+</article>

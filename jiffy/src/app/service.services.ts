@@ -1,29 +1,19 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, switchMap, timer } from 'rxjs';
 import { Service } from './service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServicesService {
+  constructor(private httpClient: HttpClient) {}
 
-  constructor() { }
+  getServices(): Observable<Service[]> {
+    return timer(1, 3000).pipe(switchMap(() => this.httpClient.get<Service[]>('http://localhost:3000/services')));
+  }
 
-  getServices(): Service[] {
-    let services: Service[] = [];
-
-    let service1: Service = {
-      id: 1,
-      title: "Window washers required!",
-      type: "Cleaning",
-      description: "Wash windows of the villa",
-      time: "20 hours",
-      completed: false,
-      author: "Rendy Werner",
-      publishDate: "15/02/2024"
-    };
-
-    services.push(service1);
-
-    return services;
+  getServiceById(id: number): Observable<Service> {
+    return this.httpClient.get<Service>(`https://localhost:3000/services/${id}`);
   }
 }

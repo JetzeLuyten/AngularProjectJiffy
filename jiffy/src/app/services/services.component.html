@@ -1,9 +1,16 @@
-<article *ngIf="service">
-    <h1>{{service.title}}</h1>
-    <h4>{{service.type}}</h4>
-    <h4>{{service.time}}</h4>
-    <p>{{service.description}}</p>
-    <footer>
-        <p>Request made by {{service.author}} on {{service.publishDate}}</p>
-    </footer>
-</article>
+<article *ngIf="service" class="max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden md:max-w-2xl transform transition duration-500 hover:scale-105">
+    <div class="md:flex">
+      <div class="p-8">
+        <h1 class="block mt-1 text-2xl leading-tight font-bold text-gray-900">{{service.title}}</h1>
+        <div class="mt-2 flex items-center">
+          <span class="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-500">{{service.type}}</span>
+          <span class="ml-2 text-sm text-gray-500">{{service.time}}</span>
+        </div>
+        <p class="mt-4 text-gray-700">{{service.description}}</p>
+        <footer class="mt-4 text-right">
+          <p class="text-gray-500">Request made by <span class="font-semibold text-gray-900">{{service.author}}</span> on {{service.publishDate}}</p>
+        </footer>
+      </div>
+    </div>
+</article>  
+<br>

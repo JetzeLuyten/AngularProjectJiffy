@@ -3,6 +3,7 @@ import { Service } from '../service';
 import { ServicesService } from '../service.services';
 import { ServicesComponent } from '../services/services.component';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-service-screen',
@@ -12,11 +13,14 @@ import { CommonModule } from '@angular/common';
   styleUrl: './service-screen.component.css'
 })
 export class ServiceScreenComponent {
-  services: Service[] = [];
+  services: Service = {id: 0, title: "", type: "", description: "", time: "", completed: false, author: "", publishDate: ""};
 
-  constructor(private serviceServices: ServicesService) {}
+  constructor(private serviceServices: ServicesService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.services = this.serviceServices.getServices();
+    const serviceId = this.route.snapshot.paramMap.get("id");
+    if(serviceId != null){
+      this.serviceServices.getServiceById(+serviceId).subscribe(result => this.services = result);
+    }
   }
 }

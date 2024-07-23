@@ -16,6 +16,7 @@ export class MenuComponent {
   }
 
   hamburgerOpen = false;
+  adminDropdownOpen = false;
 
   toggleHamburger(): void {
     this.hamburgerOpen = !this.hamburgerOpen;
@@ -27,7 +28,16 @@ export class MenuComponent {
     }
   }
 
+  onAdminDropDownClick() {
+    this.adminDropdownOpen = !this.adminDropdownOpen;
+  }
+
+  closeAdminDropDown() {
+    this.adminDropdownOpen = false;
+  }
+
   navigateTo(path: string) {
+    this.closeAdminDropDown();
     this.hamburgerOpen = false;
     this.router.navigate([path]);
   }

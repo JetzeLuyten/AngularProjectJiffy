@@ -7,4 +7,5 @@ export interface Service{
     completed: boolean;
     author: string;
     publishDate: string;
+    categoryId: number;
 }

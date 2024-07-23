@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './service-screen.component.css'
 })
 export class ServiceScreenComponent {
-  services: Service = {id: 0, title: "", type: "", description: "", time: "", completed: false, author: "", publishDate: ""};
+  services: Service = {id: 0, title: "", type: "", description: "", time: "", completed: false, author: "", publishDate: "", categoryId: 0};
 
   constructor(private serviceServices: ServicesService, private route: ActivatedRoute) {}
 

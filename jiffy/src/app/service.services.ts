@@ -7,13 +7,14 @@ import { Service } from './service';
   providedIn: 'root'
 })
 export class ServicesService {
+  private apiurl = 'https://localhost:6587/api/services';
   constructor(private httpClient: HttpClient) {}
 
   getServices(): Observable<Service[]> {
-    return timer(1, 3000).pipe(switchMap(() => this.httpClient.get<Service[]>('http://localhost:3000/services')));
+    return timer(1, 3000).pipe(switchMap(() => this.httpClient.get<Service[]>(this.apiurl)));
   }
 
   getServiceById(id: number): Observable<Service> {
-    return this.httpClient.get<Service>(`https://localhost:3000/services/${id}`);
+    return this.httpClient.get<Service>(`${this.apiurl}/${id}`);
   }
 }

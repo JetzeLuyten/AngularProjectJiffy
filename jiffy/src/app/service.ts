@@ -1,11 +1,9 @@
 export interface Service{
     id: number;
     title: string;
-    type: string;
+    serviceType: string;
     time: string;
     description: string;
-    completed: boolean;
     author: string;
     publishDate: string;
-    categoryId: number;
 }

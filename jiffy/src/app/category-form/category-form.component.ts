@@ -42,15 +42,6 @@ export class CategoryFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.isAdd) {
-      this.categoryService.getCategories().subscribe({
-        next: (categories) => {
-          const maxId = categories.reduce((max, category) => Math.max(max, Number(category.id)), 0);
-          this.category.id = maxId + 1;  // Set the ID to one more than the maximum ID
-        },
-        error: (e) => this.errorMessage = e.message
-      });
-    }
   }
 
   ngOnDestroy(): void {

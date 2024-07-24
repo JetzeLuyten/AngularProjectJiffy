@@ -10,7 +10,7 @@ import { Service } from '../service';
   styleUrl: './services.component.css'
 })
 export class ServicesComponent {
-  @Input() service: Service = { id: 0, title: "", type: "", description: "", time: "", completed: false, author: "", publishDate: "", categoryId: 0 };
+  @Input() service: Service = { id: 0, title: "", serviceType: "", description: "", time: "", author: "", publishDate: "" };
 
   constructor() {}
 

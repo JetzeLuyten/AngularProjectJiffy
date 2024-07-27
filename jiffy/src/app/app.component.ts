@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { MenuComponent } from './menu/menu.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-root',
@@ -21,9 +22,22 @@ import { FormsModule } from '@angular/forms';
 export class AppComponent implements OnInit {
   title = 'jiffy';
 
-  constructor() {}
+  constructor(private auth: AuthService) {}
+  
 
-  ngOnInit(): void {
-    
+  ngOnInit() {
+    // Log the authentication status
+    this.auth.isAuthenticated$.subscribe(isAuthenticated => {
+      console.log('User authenticated:', isAuthenticated);
+    });
+
+    // Log the user data
+    this.auth.user$.subscribe(user => {
+      console.log('User data:', user);
+    });
+  }
+
+  login() {
+    this.auth.loginWithRedirect();
   }
 }

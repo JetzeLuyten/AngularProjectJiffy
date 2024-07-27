@@ -1,12 +1,29 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withEnabledBlockingInitialNavigation } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { AuthHttpInterceptor, provideAuth0 } from '@auth0/auth0-angular';
+import { environment } from '../environments/environment';
+
+const domain = environment.AUTH0_DOMAIN;
+const clientId = environment.AUTH0_CLIENT_ID;
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
-    provideHttpClient(),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
+    provideRouter(routes, withEnabledBlockingInitialNavigation()),
+    provideHttpClient(withInterceptorsFromDi()),
+    provideAuth0({
+      domain: domain,
+      clientId: clientId,
+      authorizationParams: {
+        audience: environment.AUTH0_AUDIENCE,
+        redirect_uri: environment.redirectUri
+      },
+      httpInterceptor: {
+        allowedList: [`${environment.api_url}/services`, `${environment.api_url}/trip/*`]
+      }
+    }),
   ]
 };

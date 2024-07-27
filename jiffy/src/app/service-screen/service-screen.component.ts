@@ -4,6 +4,7 @@ import { ServicesService } from '../service.services';
 import { ServicesComponent } from '../services/services.component';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-service-screen',
@@ -13,14 +14,11 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './service-screen.component.css'
 })
 export class ServiceScreenComponent {
-  services: Service = {id: 0, title: "", serviceType: "", description: "", time: "", author: "", publishDate: ""};
-
-  constructor(private serviceServices: ServicesService, private route: ActivatedRoute) {}
-
+  services$: Observable<Service[]> = new Observable<Service[]>();
+  
+  constructor(private serviceService: ServicesService) {}
+  
   ngOnInit(): void {
-    const serviceId = this.route.snapshot.paramMap.get("id");
-    if(serviceId != null){
-      this.serviceServices.getServiceById(+serviceId).subscribe(result => this.services = result);
-    }
+    this.services$ = this.serviceService.getServices();
   }
 }

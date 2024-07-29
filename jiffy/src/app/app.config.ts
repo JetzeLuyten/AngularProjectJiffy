@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthHttpInterceptor, provideAuth0 } from '@auth0/auth0-angular';
 import { environment } from '../environments/environment';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 const domain = environment.AUTH0_DOMAIN;
 const clientId = environment.AUTH0_CLIENT_ID;
@@ -24,6 +25,6 @@ export const appConfig: ApplicationConfig = {
       httpInterceptor: {
         allowedList: [`${environment.api_url}/services`, `${environment.api_url}/trip/*`]
       }
-    }),
+    }), provideAnimationsAsync(),
   ]
 };

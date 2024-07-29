@@ -1,7 +1,10 @@
+import { ServiceType } from "./serviceType";
+
 export interface Service{
     id: number;
     title: string;
-    serviceType: string;
+    serviceTypeId: number;
+    serviceType: ServiceType;
     time: string;
     description: string;
     author: string;

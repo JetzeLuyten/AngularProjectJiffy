@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { MenuComponent } from './menu/menu.component';
+import { MenuComponent } from './screens/menu/menu.component';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
@@ -14,7 +14,8 @@ import { AuthService } from '@auth0/auth0-angular';
     RouterOutlet, 
     MenuComponent, 
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
@@ -26,15 +27,6 @@ export class AppComponent implements OnInit {
   
 
   ngOnInit() {
-    // Log the authentication status
-    this.auth.isAuthenticated$.subscribe(isAuthenticated => {
-      console.log('User authenticated:', isAuthenticated);
-    });
-
-    // Log the user data
-    this.auth.user$.subscribe(user => {
-      console.log('User data:', user);
-    });
   }
 
   login() {

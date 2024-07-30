@@ -5,8 +5,7 @@ export interface Service{
     title: string;
     serviceTypeId: number;
     serviceType: ServiceType;
-    time: string;
     description: string;
     author: string;
-    publishDate: string;
+    publishDate: Date;
 }

@@ -8,13 +8,10 @@ namespace JiffyBackend.API.Mapper
     {
         public AutoMapper()
         {
-            CreateMap<GetTripDto, Trip>();
-            CreateMap<CreateTripDto, Trip>();
-            CreateMap<Trip, GetTripDto>();
-                //.ForMember(dest => dest.Name, act => act.MapFrom(src => src.TripName));
-            CreateMap<Activity, GetActivityDto>();
-            CreateMap<GetActivityDto, Activity>();
-            CreateMap<CreateActivityDto, Activity>();
+            CreateMap<ServiceTypeDto, ServiceType>();
+            CreateMap<CreateServiceTypeDto, ServiceType>();
+            CreateMap<UpdateServiceTypeDto, ServiceType>();
+            CreateMap<ServiceDto, Service>();
         }
     }
 }

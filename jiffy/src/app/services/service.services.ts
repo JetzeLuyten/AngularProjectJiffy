@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, switchMap, timer } from 'rxjs';
 import { Service } from '../service';
 import { environment } from '../../environments/environment.development';
-import { AuthService } from './auth.service';
+import { AuthServices } from './auth.service';
 
 
 @Injectable({
@@ -13,7 +13,19 @@ export class ServicesService {
   private apiurl = environment.api_url;
   userId: number | undefined;
 
-  constructor(private httpClient: HttpClient, private auth: AuthService) {}
+  constructor(private httpClient: HttpClient, private auth: AuthServices) {}
+
+  getServicesNotCreatedByUser(): Observable<any[]> {
+    const userId = this.auth.getUserId();
+    if (userId !== null) {
+      return this.httpClient.get<any[]>(`${this.apiurl}${userId}`);
+    } else {
+      // Handle case where user ID is not available (e.g., user not logged in)
+      return new Observable(observer => {
+        observer.error('User not authenticated');
+      });
+    }
+  }
 
   getServices(): Observable<Service[]> {
     return timer(1, 3000).pipe(switchMap(() => this.httpClient.get<Service[]>(`${this.apiurl}/Services`)));

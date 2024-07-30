@@ -1,4 +1,7 @@
-﻿using JiffyBackend.DAL.Entity;
+﻿using JiffyBackend.DAL;
+using JiffyBackend.DAL.Entity;
+using System;
+using System.Linq;
 
 namespace JiffyBackend.DAL.Initializer
 {
@@ -8,34 +11,50 @@ namespace JiffyBackend.DAL.Initializer
         {
             context.Database.EnsureCreated();
 
-            // Seed the Trips table with some dummy data
-            if (!context.Trips.Any())
+            // Check if there are any existing records in the Service table
+            if (context.Services.Any())
             {
-                var trips = new Trip[]
-                {
-                new Trip {
-                    Name = "Trip 1", Activities = new List<Activity>()
-                {
-                    new Activity(){Name="Activity 1"},
-                    new Activity(){Name="Activity 2"},
-                    new Activity(){Name="Activity 3"},
-                    new Activity(){Name="Activity 4"}
-                }
-                },
-                new Trip { Name = "Trip 2" },
-                new Trip { Name = "Trip 3" },
-                new Trip { Name = "Trip 4" },
-                new Trip { Name = "Trip 5" },
-               };
+                return; // DB has been seeded
+            }
 
-                foreach (Trip t in trips)
+            // Seed the ServiceTypes table with some dummy data
+            if (!context.ServiceTypes.Any())
+            {
+                var serviceTypes = new ServiceType[]
                 {
-                    context.Trips.Add(t);
-                }
+                    new ServiceType { Name = "Consulting" },
+                    new ServiceType { Name = "Design" },
+                    new ServiceType { Name = "Development" }
+                };
 
+                context.ServiceTypes.AddRange(serviceTypes);
                 context.SaveChanges();
             }
+
+            // Add Services
+            var Services = new List<Service>
+            {
+                new Service
+                {
+                    Title = "Service 1",
+                    ServiceTypeId = 1, // Adjust to match existing category IDs
+                    Description = "Content for Service 1",
+                    Author = "Author 1",
+                    PublishDate = DateTime.UtcNow,
+                    AuthorId = "google-oauth2|108034703800733846612",
+                },
+                new Service
+                {
+                    Title = "Service 2",
+                    ServiceTypeId = 2, // Adjust to match existing category IDs
+                    Description = "Content for Service 2",
+                    Author = "Author 2",
+                    PublishDate = DateTime.UtcNow,
+                    AuthorId = "google-oauth2|108034703800733846612"
+                }
+            };
+            context.Services.AddRange(Services);
+            context.SaveChanges();
         }
     }
 }
-

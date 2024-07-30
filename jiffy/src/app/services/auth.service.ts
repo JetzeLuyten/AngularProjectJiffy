@@ -1,14 +1,13 @@
-// auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode'; // Correct import
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthServices {
   private apiUrl = 'https://localhost:6587/api/auth';
 
   constructor(private http: HttpClient) {}
@@ -29,11 +28,17 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  getUserId(): string | null {
+  getUserId(): number | null {
     const token = this.getToken();
     if (token) {
-      const decodedToken: any = jwtDecode(token);
-      return decodedToken.userId; // Adjust according to your token structure
+      try {
+        const decodedToken: any = jwtDecode(token);
+        const userId = decodedToken.userId; // Adjust according to your token structure
+        return userId ? Number(userId) : null; // Convert to number or return null
+      } catch (e) {
+        console.error('Error decoding token:', e);
+        return null;
+      }
     }
     return null;
   }

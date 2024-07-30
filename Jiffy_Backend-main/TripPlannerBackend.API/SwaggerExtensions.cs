@@ -10,7 +10,7 @@ public static class SwaggerExtensions
         {
             options.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "TripPlannerBackend.API",
+                Title = "JiffyBackend.API",
                 Description = "Learn how to protect your .NET applications with Auth0",
                 Contact = new OpenApiContact
                 {

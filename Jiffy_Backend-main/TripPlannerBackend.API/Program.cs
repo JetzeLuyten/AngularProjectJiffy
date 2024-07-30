@@ -3,36 +3,74 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using JiffyBackend.DAL;
 using JiffyBackend.DAL.Initializer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
+
+// Configure database context
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<JiffyDbContext>(options =>
     options.UseSqlServer(connectionString));
-builder.Services.AddAuthentication().AddJwtBearer();
 
-builder.Services.AddAuthorization(options =>
+// Configure authentication
+builder.Services.AddAuthentication(options =>
 {
-    options.AddPolicy("TripReadAccess", policy =>
-                          policy.RequireClaim("permissions", "read:trip"));
-    options.AddPolicy("TripWriteAccess", policy =>
-                          policy.RequireClaim("permissions", "create:trip", "update:trip"));
-    options.AddPolicy("TripDeleteAccess", policy =>
-                      policy.RequireClaim("permissions", "delete:trip"));
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.Authority = builder.Configuration["Auth0:Domain"];
+    options.Audience = builder.Configuration["Auth0:Audience"];
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        NameClaimType = "name",
+        RoleClaimType = "role"
+    };
 });
 
-builder.Services.AddControllers();
-builder.Services.AddSwaggerService();
+// Configure authorization policies
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ServiceTypeDeleteAccess", policy =>
+                            policy.RequireClaim("permissions", "delete:service"));
+    options.AddPolicy("ServiceTypeGetAccess", policy =>
+                      policy.RequireClaim("permissions", "getall:services"));
+});
+
+// Configure controllers and JSON options
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true; // Optional: for pretty-printing
+});
+
+// Configure Swagger
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Jiffy API", Version = "v1" });
+});
+
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:5878") // Use the correct URL here
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
-app.UseCors(options =>
-{
-    options.AllowAnyHeader();
-    options.AllowAnyMethod();
-    options.AllowAnyOrigin();
-});
+// Use CORS
+app.UseCors("AllowSpecificOrigin");
 
 if (app.Environment.IsDevelopment())
 {
@@ -40,14 +78,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Use HTTPS redirection
 app.UseHttpsRedirection();
 
+// Use authentication and authorization
+app.UseAuthentication();
+app.UseAuthorization();
+
+// Map controllers
 app.MapControllers();
 
+// Initialize database
 using (var scope = app.Services.CreateScope())
 {
-    var tripContext = scope.ServiceProvider.GetRequiredService<JiffyDbContext>();
-    DBInitializer.Initialize(tripContext);
+    var serviceContext = scope.ServiceProvider.GetRequiredService<JiffyDbContext>();
+    DBInitializer.Initialize(serviceContext);
 }
 
 app.Run();

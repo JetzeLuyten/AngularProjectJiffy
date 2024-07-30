@@ -1,90 +1,106 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using JiffyBackend.API.Dto;
-using JiffyBackend.DAL;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using JiffyBackend.DAL.Entity;
+using JiffyBackend.DAL;
+using JiffyBackend.API.Dto;
+using System.Security.Claims;
+using AutoMapper;
 
-namespace JiffyBackend.API.Controllers
+namespace JiffyBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ServiceController : ControllerBase
+    public class ServicesController : ControllerBase
     {
         private readonly JiffyDbContext _context;
-        private readonly IMapper _mapper;
-        public ServiceController(JiffyDbContext context, IMapper mapper)
+
+        public ServicesController(JiffyDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
-        //Search - everyone is allowed to search
 
-        //Get By ID
-        [HttpGet("{id}")]
-        //[Authorize]
-        //[Authorize(Policy = "TripReadAccess")]
-        public async Task<ActionResult<GetTripDto>> GetTrip(int id)
-        {
-            var trip = await _context.Trips.Include(t => t.Activities).SingleAsync(t => t.Id == id);
 
-            if (trip == null)
-            {
-                return NotFound();
-            }
-
-            return _mapper.Map<GetTripDto>(trip);
-        }
-
-        // Get ALL
+        // GET: api/Services
         [HttpGet]
-        //[Authorize]
-        //[Authorize(Policy = "TripReadAccess")]
-        public async Task<ActionResult<List<GetTripDto>>> GetTrips()
+        public async Task<ActionResult<IEnumerable<Service>>> GetServices()
         {
-            var trips = await _context.Trips.Include(t => t.Activities).ToListAsync();
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            Console.WriteLine(userId);
+            return await _context.Services
+                .Include(s => s.ServiceType)
+                .Where(s => userId != s.AuthorId)
+                .ToListAsync();
+        }
 
-            if (trips == null)
+
+        // GET: api/Services/5
+        [HttpGet("{id}")]
+        public IActionResult GetServiceById(int id)
+        {
+            var service = _context.Services.SingleOrDefault(s => s.Id == id);
+
+            if (service == null)
             {
                 return NotFound();
             }
 
-            return _mapper.Map<List<GetTripDto>>(trips);
+            return Ok(service);
         }
 
-        //Get Search
-        [HttpGet("search")]
-        //[Authorize]
-        //[Authorize(Policy = "TripReadAccess")]
-        public ActionResult<List<GetTripDto>> SearchTrips([FromQuery]SearchTripDto searchDto)
+        // PUT: api/Services/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutService(int id, Service service)
         {
-            var trips = _context.Trips.Include(t => t.Activities).Where(t => 
-            t.Name.ToLower().Contains(searchDto.Name.ToLower()));
+            if (id != service.Id)
+            {
+                return BadRequest();
+            }
 
-            if (trips == null)
+            _context.Entry(service).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ServiceExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+
+        // DELETE: api/Services/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteService(int id)
+        {
+            var service = await _context.Services.FindAsync(id);
+            if (service == null)
             {
                 return NotFound();
             }
 
-            return _mapper.Map<List<GetTripDto>>(trips);
-        }
-
-        //Insert - you have to be authenticated
-        [HttpPost]
-        //[Authorize]
-        //[Authorize(Policy = "TripWriteAccess")]
-        public async Task<ActionResult<GetTripDto>> AddTrip(CreateTripDto trip)
-        {
-            //We map the CreateTripDto to the Trip entity object
-            Trip tripToAdd = _mapper.Map<Trip>(trip);
-            _context.Trips.Add(tripToAdd);
+            _context.Services.Remove(service);
             await _context.SaveChangesAsync();
-            GetTripDto tripToReturn = _mapper.Map<GetTripDto>(tripToAdd);
 
-            return CreatedAtAction(nameof(GetTrip), new { id = tripToReturn.Id }, tripToReturn);
+            return NoContent();
+        }
+
+        private bool ServiceExists(int id)
+        {
+            return _context.Services.Any(e => e.Id == id);
         }
     }
 }

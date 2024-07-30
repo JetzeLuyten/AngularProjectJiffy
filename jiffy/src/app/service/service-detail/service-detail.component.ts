@@ -13,14 +13,16 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './service-detail.component.css'
 })
 export class ServiceDetailComponent implements OnInit {
-  service: Service = { id: 0, title: "", serviceTypeId: 0, serviceType: {id: 0, name: ""}, description: "", time: "", publishDate: "", author: ""};
+  service: Service = { id: 0, title: "", serviceTypeId: 0, serviceType: {id: 0, name: ""}, description: "", publishDate: new Date(), author: ""};
 
   constructor(private servicesService: ServicesService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     const serviceId = this.route.snapshot.paramMap.get('id');
-    if(serviceId != null) {
-      let serviceTemp = this.servicesService.getServiceById(+serviceId) ?? null;
+    if (serviceId != null) {
+      this.servicesService.getServiceById(+serviceId).subscribe(result => this.service = result);
     }
   }
+
+  
 }

@@ -1,6 +1,6 @@
 ﻿namespace JiffyBackend.API.Dto
 {
-    public class CreateActivityDto
+    public class CreateServiceTypeDto
     {
         public string Name { get; set; }
     }

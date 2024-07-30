@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { ServicesService } from '../../services/service.services';
 import { ServiceTypeService } from '../../services/serviceType.service';
 import { ServiceType } from '../../serviceType';
-import { AuthService } from '../../services/auth.service';
+import { AuthServices } from '../../services/auth.service';
 import { Service } from '../../service';
 
 @Component({

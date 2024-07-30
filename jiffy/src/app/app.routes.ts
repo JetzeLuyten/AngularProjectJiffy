@@ -1,5 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
-import { ServiceScreenComponent } from './service/service-screen/service-screen.component';
+import { ServiceScreenComponent } from './service/service-shop/service-screen.component';
 import { HomeComponent } from './screens/home/home.component';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';

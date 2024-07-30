@@ -13,15 +13,16 @@ namespace JiffyBackend.DAL
         public JiffyDbContext(DbContextOptions<JiffyDbContext> options) : base(options)
         {
         }
-        public DbSet<Trip> Trips => Set<Trip>();
-        public DbSet<Activity> Activities => Set<Activity>();
+        public DbSet<ServiceType> ServiceTypes => Set<ServiceType>();
+        public DbSet<Service> Services => Set<Service>();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Trip>()
-               .HasMany(e => e.Activities)
-               .WithOne(e => e.Trip)
-               .HasForeignKey(e => e.TripId)
+            modelBuilder.Entity<ServiceType>()
+               .HasMany(st => st.Services)
+               .WithOne(st => st.ServiceType)
+               .HasForeignKey(st => st.ServiceTypeId)
                .IsRequired();
 
             //Other side
@@ -31,8 +32,8 @@ namespace JiffyBackend.DAL
             //    .HasForeignKey(e => e.TripId)
             //    .IsRequired();
 
-            modelBuilder.Entity<Trip>().ToTable("Trip");
-            modelBuilder.Entity<Activity>().ToTable("Activity");
+            modelBuilder.Entity<ServiceType>().ToTable("ServiceType");
+            modelBuilder.Entity<Service>().ToTable("Service");
         }
     }
 }

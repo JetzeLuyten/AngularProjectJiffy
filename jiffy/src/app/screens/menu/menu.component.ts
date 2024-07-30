@@ -7,6 +7,7 @@ import { SignupComponent } from '../../auth0/signup/signup.component';
 import { NavbarComponent } from "../navbar/navbar.component";
 import { RoleService } from '../../services/role.service';
 import { LogoutComponent } from "../../auth0/logout/logout.component";
+import { AuthServices} from "../../services/auth.service"
 
 @Component({
   selector: 'app-menu',
@@ -20,8 +21,9 @@ export class MenuComponent {
   isAdmin = signal(false);
   user$ = this.auth.user$;
   userName: string | undefined;
+  userId: string | null = null;
 
-  constructor(private router: Router, private authService: AuthService, public roleService: RoleService, private auth: AuthService) {
+  constructor(private router: Router, private authService: AuthService, public roleService: RoleService, private authServices: AuthServices, private auth: AuthService) {
     this.authService.isAuthenticated$.subscribe((auth) => {
       this.isAuthenticated.set(auth)
     });
@@ -34,11 +36,13 @@ export class MenuComponent {
   ngOnInit(): void {
     this.user$.subscribe(user => {
       if (user) {
-        this.userName = user.name;  // Access the user's email
+        this.userName = user.sub;  // Access the user's email
         console.log('User name:', this.userName);
       }
     });
   }
+
+  
 
   hamburgerOpen = false;
   adminDropdownOpen = false;

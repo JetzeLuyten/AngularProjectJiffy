@@ -1,3 +1,4 @@
+import { User } from "./user";
 import { ServiceType } from "./serviceType";
 
 export interface Service{
@@ -6,6 +7,7 @@ export interface Service{
     serviceTypeId: number;
     serviceType: ServiceType;
     description: string;
-    author: string;
-    publishDate: Date;
+    userId: number;
+    user: User;
+    publishDate: string;
 }

@@ -23,8 +23,8 @@
           </li>
           @if(isAuthenticated()) {
             <li>
-              <a (click)="onHamburgerItemClick()" routerLink="/services" routerLinkActive="active"
-               [routerLinkActiveOptions]="{ exact: true }" class="block py-2 pr-4 pl-3 rounded ">Services</a>
+              <a (click)="onHamburgerItemClick()" routerLink="/myservices" routerLinkActive="active"
+               [routerLinkActiveOptions]="{ exact: true }" class="block py-2 pr-4 pl-3 rounded ">My services</a>
             </li>
           } @else {
             <li>
@@ -41,9 +41,9 @@
                    class="absolute right-0 mt-2 w-full bg-white shadow-lg">
                   <ul class="py-1 text-sm text-gray-700" aria-labelledby="dropdownNavbarLink">
                       <li *ngIf="isAdmin()" class="cursor-pointer">
-                          <a (click)="navigateTo('admin/serviceType')"
+                          <a (click)="navigateTo('admin/servicetype')"
                              class="block py-2 px-4 hover:bg-gray-100">
-                             Categories
+                             ServiceType
                           </a>
                       </li>
                       <li class="cursor-pointer">

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServiceType } from '../../serviceType';
-import { ServiceTypeService } from '../../services/serviceType.service';
+import { ServiceType } from '../../model/serviceType';
+import { ServiceTypeService } from '../../services/service-type.service';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, FormsModule],
   styleUrls: ['./service-type-form.component.css']
 })
+
 export class CategoryFormComponent implements OnInit, OnDestroy {
   isAdd: boolean = false;
   isEdit: boolean = false;
@@ -39,6 +40,7 @@ export class CategoryFormComponent implements OnInit, OnDestroy {
     if (this.serviceTypeId != null && this.serviceTypeId > 0) {
       this.service$ = this.serviceTypeService.getServiceTypeById(this.serviceTypeId).subscribe(result => this.serviceType = result);
     }
+
   }
 
   ngOnInit(): void {
@@ -54,15 +56,16 @@ export class CategoryFormComponent implements OnInit, OnDestroy {
     this.isSubmitted = true;
     if (this.isAdd) {
       this.postServiceType$ = this.serviceTypeService.postServiceType(this.serviceType).subscribe({
-        next: (v) => this.router.navigateByUrl("/admin/serviceType"),
+        next: (v) => this.router.navigateByUrl("/admin/servicetype"),
         error: (e) => this.errorMessage = e.message
       });
     }
     if (this.isEdit) {
       this.putServiceType$ = this.serviceTypeService.putServiceType(this.serviceTypeId, this.serviceType).subscribe({
-        next: (v) => this.router.navigateByUrl("/admin/serviceType"),
+        next: (v) => this.router.navigateByUrl("/admin/servicetype"),
         error: (e) => this.errorMessage = e.message
       });
     }
   }
+  
 }

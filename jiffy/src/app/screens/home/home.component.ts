@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { ServicesComponent } from '../../service/services.component';
 import { MenuComponent } from "../menu/menu.component";
 import { Observable } from 'rxjs';
-import { Service } from '../../service';
+import { Service } from '../../model/service';
 import { ServicesService } from '../../services/service.services';
 
 

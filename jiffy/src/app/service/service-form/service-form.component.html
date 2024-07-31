@@ -1,47 +1,37 @@
-<!-- <h1>{{getTitle()}}</h1>
-<div class="alert alert-danger" role="alert" *ngIf="errorMessage">
-  {{errorMessage}}
+<div class="rounded p-4 mb-4 text-lg bg-red-200 text-red-800 border-2 border-red-300" *ngIf="isSubmitted && errorMessage">
+  {{ errorMessage }}
 </div>
-<div class="alert alert-warning" role="warning">
-  <p>Form Status: {{ articleForm.status }}</p>
-</div>
-<form (ngSubmit)="onSubmit()" [formGroup]="serviceForm">
-  <div class="form-group">
-    <label for="title">Title</label>
-    <input type="text" class="form-control" id="title" name="title" placeholder="Title" formControlName="title"
-           minlength="2">
+<form (ngSubmit)="onSubmit()" #offerForm="ngForm">
+  <div class="mb-6">
+      <label for="title" class="block mb-2 text-sm font-medium text-gray-900">Title</label>
+      <input type="text" id="title" name="title"
+             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+             placeholder="Title" required [(ngModel)]="service.title" #title="ngModel">
+      <div [hidden]="title.valid || title.pristine" class="text-red-500 mt-2">Title is required</div>
   </div>
-  <div class="form-group">
-    <label for="subtitle">Subtitle</label>
-    <input type="text" class="form-control" id="subtitle" name="subtitle" placeholder="Subtitle"
-           formControlName="subtitle" minlength="2">
+
+  <div class="mb-6">
+      <label for="serviceTypeId" class="block mb-2 text-sm font-medium text-gray-900">Service Type</label>
+      <select type="number" id="serviceTypeId" name="serviceTypeId"
+             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+             required [(ngModel)]="service.serviceTypeId" #serviceTypeId="ngModel">
+             <option *ngFor="let type of serviceTypes" [value]="type.id">
+              {{type.name}}
+             </option>
+      </select>
+      <div [hidden]="serviceTypeId.valid || serviceTypeId.pristine" class="text-red-500 mt-2">Service Type is required</div>
   </div>
-  <div class="form-group">
-    <select class="custom-select" formControlName="categoryId">
-      <option value="" disabled>Choose the category</option>
-      <option *ngFor="let category of categories" [ngValue]="category.id">{{category.name}}</option>
-    </select>
+
+  <div class="mb-6">
+      <label for="description" class="block mb-2 text-sm font-medium text-gray-900">Description</label>
+      <textarea id="description" name="description"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Description" required [(ngModel)]="service.description" #description="ngModel"></textarea>
+      <div [hidden]="description.valid || description.pristine" class="text-red-500 mt-2">Description is required</div>
   </div>
-  <div class="form-group">
-    <label for="content">Content</label>
-    <textarea class="form-control" id="content" name="content" placeholder="Content" formControlName="content"
-              minlength="2" rows="10"></textarea>
-  </div>
-  <div class="form-group">
-    <label for="imageCaption">Image caption</label>
-    <input type="text" class="form-control" id="imageCaption" name="imageCaption" placeholder="Image caption"
-           formControlName="imageCaption" minlength="2">
-  </div>
-  <div class="form-group">
-    <label for="status">Status</label>
-    <select class="custom-select" formControlName="statusId" id="status">
-      <option *ngFor="let status of statuses; let i = index" [ngValue]="status.id">{{status.name}}</option>
-    </select>
-  </div>
-  <button type="submit" class="btn btn-primary" *ngIf="isAdd" [disabled]="!articleForm.valid || isSubmitted">Add new
-    article
-  </button>
-  <button type="submit" class="btn btn-primary" *ngIf="isEdit" [disabled]="!articleForm.valid || isSubmitted">Save
-  </button>
+
+  <button type="submit" *ngIf="isAdd" [disabled]="!offerForm.form.valid || isSubmitted"
+          class="text-white bg-blue-700 enabled:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center disabled:opacity-75">Add</button>
+  <button type="submit" *ngIf="isEdit" [disabled]="!offerForm.form.valid || isSubmitted"
+          class="text-white bg-blue-700 enabled:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center disabled:opacity-75">Save</button>
 </form>
- -->

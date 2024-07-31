@@ -8,10 +8,17 @@ namespace JiffyBackend.API.Mapper
     {
         public AutoMapper()
         {
-            CreateMap<ServiceTypeDto, ServiceType>();
+            CreateMap<ServiceType, ServiceTypeDto>();
             CreateMap<CreateServiceTypeDto, ServiceType>();
             CreateMap<UpdateServiceTypeDto, ServiceType>();
-            CreateMap<ServiceDto, Service>();
+
+            CreateMap<Service, ServiceDto>();
+            CreateMap<CreateServiceDto, Service>();
+            CreateMap<UpdateServiceDto, Service>();
+
+            CreateMap<User, UserDto>();
+            CreateMap<CreateUserDto, User>();
+            CreateMap<UpdateUserDto, User>();
         }
     }
 }

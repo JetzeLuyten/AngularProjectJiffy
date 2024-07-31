@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {Service} from '../../service';
+import {Service} from '../../model/service';
 import {ServicesService} from '../../services/service.services';
 import {Router} from '@angular/router';
 

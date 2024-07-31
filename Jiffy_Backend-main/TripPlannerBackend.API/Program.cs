@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
 
+
 // Configure database context
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<JiffyDbContext>(options =>
@@ -31,6 +32,7 @@ builder.Services.AddAuthentication(options =>
         RoleClaimType = "role"
     };
 });
+
 
 // Configure authorization policies
 builder.Services.AddAuthorization(options =>
@@ -92,6 +94,8 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var serviceContext = scope.ServiceProvider.GetRequiredService<JiffyDbContext>();
+    serviceContext.Database.EnsureDeleted();
+    serviceContext.Database.EnsureCreated();
     DBInitializer.Initialize(serviceContext);
 }
 

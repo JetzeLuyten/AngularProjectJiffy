@@ -1,69 +1,48 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, switchMap, timer } from 'rxjs';
-import { Service } from '../service';
+import { Service } from '../model/service';
 import { environment } from '../../environments/environment.development';
 import { AuthServices } from './auth.service';
+import { AuthService } from '@auth0/auth0-angular';
+import { UpdateServiceDto } from '../model/update-ervice.dto';
+import { CreateServiceDto } from '../model/create-service.dto';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServicesService {
-  private apiurl = environment.api_url;
-  userId: number | undefined;
+  private apiUrl = environment.api_url; // Update to the actual API URL
 
-  constructor(private httpClient: HttpClient, private auth: AuthServices) {}
+  constructor(private httpClient: HttpClient, private auth: AuthService) { }
 
-  getServicesNotCreatedByUser(): Observable<any[]> {
-    const userId = this.auth.getUserId();
-    if (userId !== null) {
-      return this.httpClient.get<any[]>(`${this.apiurl}${userId}`);
-    } else {
-      // Handle case where user ID is not available (e.g., user not logged in)
-      return new Observable(observer => {
-        observer.error('User not authenticated');
-      });
-    }
+  createService(service: CreateServiceDto): Observable<Service> {
+    return this.auth.user$.pipe(
+      switchMap(user => {
+        const userId = user?.sub;
+        return this.httpClient.post<Service>(this.apiUrl + "/service", service );
+      })
+    );
   }
 
   getServices(): Observable<Service[]> {
-    return timer(1, 3000).pipe(switchMap(() => this.httpClient.get<Service[]>(`${this.apiurl}/Services`)));
+    return this.httpClient.get<Service[]>(`${this.apiUrl}/service`);
   }
-
-  getServicesFromUser(): Observable<Service[]> {
-    return this.httpClient.get<Service[]>(`${this.apiurl}/Services` + this.auth.getUserId() + '&_sort=id&_order=desc&_expand=status&_expand=category');
-  }
-
-  deleteService(id: number): Observable<Service> {
-    return this.httpClient.delete<Service>(`${this.apiurl}/Services/${id}`);
-  }
-
-  postService(service: Service): Observable<Service> {
-    let headers = new HttpHeaders();
-    headers = headers.set('Content-Type', 'application/json; charset=utf-8');
-
-    return this.httpClient.post<Service>(this.apiurl, service, {headers: headers});
-}
 
   getServiceById(id: number): Observable<Service> {
-    return this.httpClient.get<Service>(`${this.apiurl}/Services/${id}`);
+    return this.httpClient.get<Service>(`${this.apiUrl}/service/${id}`);
   }
 
-  putService(id: number, service: Service): Observable<Service> {
-    let headers = new HttpHeaders();
-    headers = headers.set('Content-Type', 'application/json; charset=utf-8');
-
-    return this.httpClient.put<Service>(`${this.apiurl}/Services/${id}`, service, {headers: headers});
+  getServicesByUser(userId: string): Observable<Service[]> {
+    return this.httpClient.get<Service[]>(`${this.apiUrl}/service/user/${userId}`);
   }
 
-  /* publishArticle(id: number): Observable<Service> {
-    return this.getArticleById(id).pipe(
-            switchMap(article => {
-              article.statusId = StatusEnum.PUBLISHED;
-              return this.putArticle(id, article);
-            })
-    );
+  updateService(id: number, service: UpdateServiceDto): Observable<void> {
+    return this.httpClient.put<void>(`${this.apiUrl}/service/${id}`, service);
+  }
 
-  } */
+  deleteService(id: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.apiUrl}/service/${id}`);
+  }
 }

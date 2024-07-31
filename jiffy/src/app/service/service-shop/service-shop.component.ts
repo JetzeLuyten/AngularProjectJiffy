@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Service } from '../../service';
+import { Service } from '../../model/service';
 import { ServicesService } from '../../services/service.services';
 import { ServicesComponent } from '../services.component';
 import { CommonModule } from '@angular/common';
@@ -8,13 +8,13 @@ import { Observable, Subscription } from 'rxjs';
 import { AuthServices } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-service-screen',
+  selector: 'app-service-shop',
   standalone: true,
   imports: [CommonModule, ServicesComponent],
-  templateUrl: './service-screen.component.html',
-  styleUrl: './service-screen.component.css'
+  templateUrl: './service-shop.component.html',
+  styleUrl: './service-shop.component.css'
 })
-export class ServiceScreenComponent {
+export class ServiceShopComponent {
   services: Service[] = [];
   services$: Subscription = new Subscription();
   errorMessage: string = '';
@@ -29,17 +29,6 @@ export class ServiceScreenComponent {
  
   ngOnDestroy(): void {
     this.services$.unsubscribe();
-  }
-
-  loadServices(): void {
-    this.servicesSubscription = this.servicesService.getServicesNotCreatedByUser().subscribe(
-      (result) => {
-        this.services = result;
-      },
-      (error) => {
-        this.errorMessage = error.message;
-      }
-    );
   }
  
   getServices() {

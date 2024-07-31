@@ -15,7 +15,7 @@ namespace JiffyBackend.DAL
         }
         public DbSet<ServiceType> ServiceTypes => Set<ServiceType>();
         public DbSet<Service> Services => Set<Service>();
-
+        public DbSet<User> Users => Set<User>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,6 +24,12 @@ namespace JiffyBackend.DAL
                .WithOne(st => st.ServiceType)
                .HasForeignKey(st => st.ServiceTypeId)
                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Services)
+                .WithOne(s => s.User)
+                .HasForeignKey(s => s.UserId)
+                .IsRequired();
 
             //Other side
             //modelBuilder.Entity<Activity>()
@@ -34,6 +40,7 @@ namespace JiffyBackend.DAL
 
             modelBuilder.Entity<ServiceType>().ToTable("ServiceType");
             modelBuilder.Entity<Service>().ToTable("Service");
+            modelBuilder.Entity<User>().ToTable("User");
         }
     }
 }

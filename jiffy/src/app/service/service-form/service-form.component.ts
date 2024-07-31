@@ -1,142 +1,122 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Service } from '../../model/service';
 import { Subscription } from 'rxjs';
 import { ServicesService } from '../../services/service.services';
-import { ServiceTypeService } from '../../services/serviceType.service';
-import { ServiceType } from '../../serviceType';
-import { AuthServices } from '../../services/auth.service';
-import { Service } from '../../service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { UpdateServiceDto } from '../../model/update-ervice.dto';
+import { ServiceType } from '../../model/serviceType';
+import { Router } from '@angular/router';
+import { ServiceTypeService } from '../../services/service-type.service';
+import { AuthService } from '@auth0/auth0-angular';
+import { CreateServiceDto } from '../../model/create-service.dto';
+
 
 @Component({
   selector: 'app-service-form',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './service-form.component.html',
   styleUrls: ['./service-form.component.scss']
 })
-export class ServiceFormComponent {
-  /*serviceId: number = 0;
+export class ServiceFormComponent implements OnInit, OnDestroy {
   isAdd: boolean = false;
   isEdit: boolean = false;
+  serviceId: number = 0;
 
+  service: Service = { 
+    id: 0, 
+    title: "", 
+    serviceTypeId: 0, 
+    serviceType: { id: 0, name: ""}, 
+    description: "", 
+    userId: 0, 
+    user: { id: 0, auth0UserId: "", email: "", fullName: ""}, 
+    publishDate: "" 
+  };
+
+  serviceTypes: ServiceType[] = [];
   isSubmitted: boolean = false;
   errorMessage: string = '';
 
+  service$: Subscription = new Subscription();
+
   postService$: Subscription = new Subscription();
   putService$: Subscription = new Subscription();
-  categories$: Subscription = new Subscription();
-  statuses$: Subscription = new Subscription();
-
-  imageSrc: string = '';
-
-  // reactive form
-  serviceForm = new FormGroup({
-    id: new FormControl(0),
-    title: new FormControl('', [Validators.required]),
-    serviceType: new FormControl('', [Validators.required]),
-    time: new FormControl('', [Validators.required]),
-    description: new FormControl(''),
-    author: new FormControl('', [Validators.required]),
-    publishDate: new FormControl('')
-  });
-
-  // categories select
-  serviceTypes: ServiceType[] = [];
+  serviceTypes$: Subscription = new Subscription();
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
-    private servicesService: ServicesService,
+    private serviceService: ServicesService,
     private serviceTypeService: ServiceTypeService,
-    // private statusService: StatusService,
-    private authService: AuthService
+    private auth: AuthService
   ) {
-    this.isAdd = this.router.url === '/newservice';
-    this.isEdit = !this.isAdd;
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state) {
+      this.isAdd = navigation.extras.state['mode'] === 'add';
+      this.isEdit = navigation.extras.state['mode'] === 'edit';
+      this.serviceId = Number(navigation.extras.state['id']);
+
+      if (!this.isAdd && !this.isEdit) {
+        this.isAdd = true;
+      }
+  
+      if (this.serviceId != null && this.serviceId > 0) {
+        this.service$ = this.serviceService.getServiceById(this.serviceId).subscribe(result => this.service = result);
+      }
+
+      this.serviceTypes$ = this.serviceTypeService.getServiceTypes().subscribe({
+        next: (result) => this.serviceTypes = result,
+        error: (e) => this.errorMessage = e.message
+      });
+    }
   }
 
   ngOnInit(): void {
-    // Decode user ID from JWT
-    const userId = this.authService.getUserId();
-    console.log('User ID:', userId);
-
-    // get service if in edit
-    if (this.isEdit) {
-      const id = this.route.snapshot.paramMap.get('id');
-      if (id != null) {
-        this.serviceId = +id;
-        this.servicesService.getServiceById(this.serviceId).subscribe(result => {
-          this.serviceForm.patchValue({
-            id: result.id,
-            title: result.title,
-            serviceType: result.serviceType,
-            description: result.description,
-            time: result.time,
-            author: result.author,
-            publishDate: result.publishDate
-          });
-        });
-      }
-    }
-
-    // get categories
-    this.categories$ = this.serviceTypeService.getCategories().subscribe(result => {
-      this.serviceTypes = result;
-    });
+    
   }
 
   ngOnDestroy(): void {
+    this.service$.unsubscribe();
     this.postService$.unsubscribe();
-    this.categories$.unsubscribe();
-    this.statuses$.unsubscribe();
     this.putService$.unsubscribe();
+    this.serviceTypes$.unsubscribe();
   }
 
-  getTitle(): string {
-    return this.isAdd ? 'Add new service' : 'Edit service';
-  }
-
-  onSubmit(): void {
+  onSubmit() {
     this.isSubmitted = true;
-    this.submitData();
-  }
 
-  submitData(): void {
-    if (this.serviceForm.invalid) {
-      this.isSubmitted = false;
-      return;
-    }
-  
-    // Extract values from the form and ensure proper types
-    const formValue = this.serviceForm.value;
-  
-    // Ensure the values are properly converted or defaulted
-    const service: Service = {
-      id: formValue.id ?? 0, // Default to 0 if null or undefined
-      title: formValue.title ?? '',
-      serviceType: formValue.serviceType ?? '',
-      time: formValue.time ?? '',
-      description: formValue.description ?? '',
-      author: formValue.author ?? '',
-      publishDate: formValue.publishDate ?? ''
-    };
-  
-    if (this.isAdd) {
-      // Add
-      this.postService$ = this.servicesService.postService(service).subscribe(result => {
-        this.router.navigateByUrl('/');
-      }, error => {
-        this.isSubmitted = false;
-        this.errorMessage = error.message;
-      });
-    } else {
-      // Edit
-      this.putService$ = this.servicesService.putService(this.serviceId, service).subscribe(result => {
-        this.router.navigateByUrl('/');
-      }, error => {
-        this.isSubmitted = false;
-        this.errorMessage = error.message;
-      });
-    }
-  }*/
-  
+    this.auth.user$.subscribe(user => {
+      if (user?.sub) {
+        if (this.isAdd) {
+          const createServiceDto: CreateServiceDto = {
+            title: this.service.title,
+            description: this.service.description,
+            serviceTypeId: this.service.serviceTypeId,
+            userId: user.sub, // Set the user ID
+            publishDate: new Date() // Set the current date and time as the publishing date
+          };
+
+          this.postService$ = this.serviceService.createService(createServiceDto).subscribe({
+            next: () => this.router.navigateByUrl('/myservices'),
+            error: (e) => this.errorMessage = e.message
+          });
+        }
+
+        if (this.isEdit) {
+          const updateServiceDto: UpdateServiceDto = {
+            id: this.service.id,
+            title: this.service.title,
+            description: this.service.description,
+            serviceTypeId: this.service.serviceTypeId
+          };
+
+          this.putService$ = this.serviceService.updateService(this.serviceId, updateServiceDto).subscribe({
+            next: () => this.router.navigateByUrl('/myservices'),
+            error: (e) => this.errorMessage = e.message
+          });
+        }
+      }
+    });
+  }
 }

@@ -1,10 +1,9 @@
-﻿using JiffyBackend.DAL.Entity;
-
-namespace JiffyBackend.API.Dto
+﻿namespace JiffyBackend.API.Dto
 {
     public class ServiceTypeDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
     }
+
 }

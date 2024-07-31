@@ -1,6 +1,6 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { Service } from '../service';
+import { Service } from '../model/service';
 import { Router } from '@angular/router';
 import { ShortenContentPipe } from '../shorten-content.pipe';
 import { DateFormatPipe } from '../date-format.pipe';
@@ -14,7 +14,8 @@ import { AuthService } from '@auth0/auth0-angular';
   styleUrl: './services.component.css'
 })
 export class ServicesComponent {
-  @Input() service: Service = { id: 0, title: "", serviceTypeId: 0, serviceType: {id: 0, name: ""}, description: "", author: "", publishDate: new Date()  };
+  @Input() service: Service = { id: 0, title: "", serviceTypeId: 0, serviceType: {id: 0, name: ""}, description: "", userId: 0, 
+  user: {id: 0, auth0UserId: "", email: "", fullName: ""}, publishDate: ""  };
   @Input() isDetail: boolean = false;
   user$ = this.auth.user$;
   userName: string | undefined;

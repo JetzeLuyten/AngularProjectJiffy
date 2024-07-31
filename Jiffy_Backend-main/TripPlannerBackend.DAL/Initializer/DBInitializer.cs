@@ -23,8 +23,8 @@ namespace JiffyBackend.DAL.Initializer
                 var serviceTypes = new ServiceType[]
                 {
                     new ServiceType { Name = "Consulting" },
-                    new ServiceType { Name = "Design" },
-                    new ServiceType { Name = "Development" }
+                    new ServiceType { Name = "Lawnmowing" },
+                    new ServiceType { Name = "Babysitting" }
                 };
 
                 context.ServiceTypes.AddRange(serviceTypes);
@@ -32,29 +32,43 @@ namespace JiffyBackend.DAL.Initializer
             }
 
             // Add Services
-            var Services = new List<Service>
+            if (!context.Users.Any())
             {
-                new Service
+                var users = new User[]
                 {
-                    Title = "Service 1",
-                    ServiceTypeId = 1, // Adjust to match existing category IDs
-                    Description = "Content for Service 1",
-                    Author = "Author 1",
-                    PublishDate = DateTime.UtcNow,
-                    AuthorId = "google-oauth2|108034703800733846612",
-                },
-                new Service
+                    new User { Auth0UserId = "auth0|66a5163b7686a649a4dbc971", Email = "Emailski", FullName = "Jetze L" },
+                    new User { Auth0UserId = "auth0|dummyuser2", Email = "Emailski", FullName = "Dummy User 2" }
+                };
+
+                context.Users.AddRange(users);
+                context.SaveChanges();
+            }
+            
+            if (!context.Services.Any())
+            {
+                var services = new List<Service>
                 {
-                    Title = "Service 2",
-                    ServiceTypeId = 2, // Adjust to match existing category IDs
-                    Description = "Content for Service 2",
-                    Author = "Author 2",
-                    PublishDate = DateTime.UtcNow,
-                    AuthorId = "google-oauth2|108034703800733846612"
-                }
-            };
-            context.Services.AddRange(Services);
-            context.SaveChanges();
+                    new Service
+                    {
+                        Title = "Service 1",
+                        ServiceTypeId = context.ServiceTypes.FirstOrDefault(st => st.Name == "Consulting")?.Id ?? 1,
+                        Description = "Content for Service 1",
+                        UserId = context.Users.FirstOrDefault(u => u.FullName == "Jetze L")?.Id ?? 3,
+                        PublishDate = DateTime.UtcNow
+                    },
+                    new Service
+                    {
+                        Title = "Service 2",
+                        ServiceTypeId = context.ServiceTypes.FirstOrDefault(st => st.Name == "Design") ?.Id ?? 2,
+                        Description = "Content for Offer 2",
+                        UserId = context.Users.FirstOrDefault(u => u.FullName == "Dummy User 2")?.Id ?? 2,
+                        PublishDate = DateTime.UtcNow
+                    }
+                };
+
+                context.Services.AddRange(services);
+                context.SaveChanges();
+            }
         }
     }
 }

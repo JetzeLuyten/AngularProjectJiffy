@@ -25,14 +25,22 @@ namespace JiffyBackend.Controllers
 
         // GET: api/ServiceType
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ServiceType>>> GetServiceTypes()
+        public async Task<ActionResult<IEnumerable<ServiceType>>> GetAllServiceTypes()
         {
-            return await _context.ServiceTypes.ToListAsync();
+            var serviceTypes = await _context.ServiceTypes.ToListAsync();
+
+            if (serviceTypes == null || !serviceTypes.Any())
+            {
+                return NotFound();
+            }
+
+            var serviceTypeDtos = _mapper.Map<List<ServiceType>>(serviceTypes);
+            return Ok(serviceTypeDtos);
         }
 
         // GET: api/ServiceType/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceType>> GetServiceType(int id)
+        public async Task<ActionResult<ServiceType>> GetServiceTypeById(int id)
         {
             var serviceType = await _context.ServiceTypes.FindAsync(id);
 
@@ -41,7 +49,8 @@ namespace JiffyBackend.Controllers
                 return NotFound();
             }
 
-            return serviceType;
+            var serviceTypeDtos = _mapper.Map<ServiceTypeDto>(serviceType);
+            return Ok(serviceTypeDtos);
         }
 
         // PUT: api/ServiceType/5
@@ -82,7 +91,7 @@ namespace JiffyBackend.Controllers
             await _context.SaveChangesAsync();
 
             var createdServiceTypeDto = _mapper.Map<ServiceTypeDto>(serviceType);
-            return CreatedAtAction(nameof(GetServiceType), new { id = serviceType.Id }, createdServiceTypeDto);
+            return CreatedAtAction(nameof(GetServiceTypeById), new { id = serviceType.Id }, createdServiceTypeDto);
         }
 
         // DELETE: api/ServiceType/5
@@ -99,11 +108,6 @@ namespace JiffyBackend.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool ServiceTypeExists(int id)
-        {
-            return _context.ServiceTypes.Any(e => e.Id == id);
         }
     }
 }

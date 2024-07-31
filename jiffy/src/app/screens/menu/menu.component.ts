@@ -36,7 +36,7 @@ export class MenuComponent {
   ngOnInit(): void {
     this.user$.subscribe(user => {
       if (user) {
-        this.userName = user.sub;  // Access the user's email
+        this.userName = user.name;  // Access the user's email
         console.log('User name:', this.userName);
       }
     });

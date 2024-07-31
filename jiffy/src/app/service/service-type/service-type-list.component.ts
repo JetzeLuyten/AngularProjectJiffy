@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { ServiceType } from '../../serviceType';
+import { ServiceType } from '../../model/serviceType';
 import { Subscription } from 'rxjs';
-import { ServiceTypeService } from '../../services/serviceType.service';
+import { ServiceTypeService } from '../../services/service-type.service';
 import { Router } from '@angular/router';
 import { state } from '@angular/animations';
 import { CommonModule } from '@angular/common';
@@ -34,11 +34,11 @@ export class CategoryListComponent {
 
   add() {
     //Navigate to form in add mode
-    this.router.navigate(['admin/category/form'], {state: {mode: 'add'}});
+    this.router.navigate(['admin/servicetype/form'], {state: {mode: 'add'}});
   }
 
   edit(id: number) {
-    this.router.navigate(['admin/category/form'], { state: {id: id, mode: 'edit'} });
+    this.router.navigate(['admin/servicetype/form'], { state: {id: id, mode: 'edit'} });
   }
 
   delete(id: number) {

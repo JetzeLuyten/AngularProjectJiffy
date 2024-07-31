@@ -1,88 +1,134 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using JiffyBackend.DAL.Entity;
-using JiffyBackend.DAL;
 using JiffyBackend.API.Dto;
-using System.Security.Claims;
-using AutoMapper;
+using JiffyBackend.DAL;
+using JiffyBackend.DAL.Entity;
 
-namespace JiffyBackend.Controllers
+namespace JiffyBackend.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ServicesController : ControllerBase
+    public class ServiceController : ControllerBase
     {
         private readonly JiffyDbContext _context;
-
-        public ServicesController(JiffyDbContext context)
+        private readonly IMapper _mapper;
+        public ServiceController(JiffyDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-
-
-        // GET: api/Services
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Service>>> GetServices()
+        public async Task<ActionResult<List<ServiceDto>>> GetAllServices()
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            Console.WriteLine(userId);
-            return await _context.Services
-                .Include(s => s.ServiceType)
-                .Where(s => userId != s.AuthorId)
-                .ToListAsync();
+            var services = await _context.Services
+        .Include(o => o.ServiceType)
+        .Include(o => o.User) // Ensure related User is included
+        .ToListAsync();
+
+            if (services == null || !services.Any())
+            {
+                return NotFound();
+            }
+
+            var serviceDtos = _mapper.Map<List<ServiceDto>>(services);
+            return Ok(serviceDtos);
         }
 
-
-        // GET: api/Services/5
         [HttpGet("{id}")]
-        public IActionResult GetServiceById(int id)
+        public async Task<ActionResult<ServiceDto>> GetServiceById(int id)
         {
-            var service = _context.Services.SingleOrDefault(s => s.Id == id);
+            var service = await _context.Services.Include(o => o.ServiceType).Include(o => o.User).FirstOrDefaultAsync(o => o.Id == id);
 
             if (service == null)
             {
                 return NotFound();
             }
 
-            return Ok(service);
+            var serviceDto = _mapper.Map<ServiceDto>(service);
+            return Ok(serviceDto);
         }
 
-        // PUT: api/Services/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutService(int id, Service service)
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<List<ServiceDto>>> GetServicesByUser(string userId)
         {
-            if (id != service.Id)
+            var services = await _context.Services
+                .Include(o => o.ServiceType)
+                .Include(o => o.User)
+                .Where(o => o.User.Auth0UserId == userId)
+                .ToListAsync();
+
+            if (services == null || !services.Any())
+            {
+                var offas = await _context.Services
+                    .Include(o => o.ServiceType)
+                    .Include(o => o.User)
+                    .Where(o => o.User.Auth0UserId == "niks")
+                    .ToListAsync();
+                return Ok(_mapper.Map<List<ServiceDto>>(offas)); //return nothing back
+                //return NotFound();
+            }
+
+            var serviceDtos = _mapper.Map<List<ServiceDto>>(services);
+            return Ok(serviceDtos);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ServiceDto>> CreateService([FromBody] CreateServiceDto createServiceDto)
+        {
+            if (createServiceDto == null)
             {
                 return BadRequest();
             }
 
-            _context.Entry(service).State = EntityState.Modified;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Auth0UserId == createServiceDto.UserId);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
 
-            try
+            var service = new Service
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
+                Title = createServiceDto.Title,
+                Description = createServiceDto.Description,
+                ServiceTypeId = createServiceDto.ServiceTypeId,
+                User = user,
+                PublishDate = createServiceDto.PublishDate
+            };
+            service.User = user;
+
+            _context.Services.Add(service);
+            await _context.SaveChangesAsync();
+
+            var createdServiceDto = _mapper.Map<ServiceDto>(service);
+            return CreatedAtAction(nameof(GetServiceById), new { id = service.Id }, createdServiceDto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateService(int id, [FromBody] UpdateServiceDto updateServiceDto)
+        {
+            if (id != updateServiceDto.Id)
             {
-                if (!ServiceExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest();
             }
+
+            var existingService = await _context.Services.FindAsync(id);
+            if (existingService == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(updateServiceDto, existingService);
+
+            _context.Services.Update(existingService);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-
-        // DELETE: api/Services/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteService(int id)
         {
@@ -96,11 +142,6 @@ namespace JiffyBackend.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool ServiceExists(int id)
-        {
-            return _context.Services.Any(e => e.Id == id);
         }
     }
 }

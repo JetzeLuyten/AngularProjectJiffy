@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ServiceTypeService } from './serviceType.service';
+import { ServiceTypeService } from './service-type.service';
 
 describe('ServiceTypeService', () => {
   let service: ServiceTypeService;

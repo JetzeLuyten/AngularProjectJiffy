@@ -47,11 +47,11 @@ export class MyServicesComponent implements OnInit, OnDestroy {
     })
   }
 
-  
+
   editService(id: number) {
     if (!isNaN(id)) {
       console.log('ID for edit:', id);
-      this.router.navigate(['/service/form'], { state: { id: id, mode: 'edit' } });
+      this.router.navigate(['myservices/form'], { state: { id: id, mode: 'edit' } });
     } else {
       console.error('Invalid ID for edit:', id);
     }

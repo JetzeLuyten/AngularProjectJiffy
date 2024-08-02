@@ -10,21 +10,34 @@ import { ServiceDetailComponent } from './service/service-detail/service-detail.
 import { adminGuard } from './admin.guard';
 import { ServiceFormComponent } from './service/service-form/service-form.component';
 import { MyServicesComponent } from './service/my-services/my-services.component';
+import { MyBookingsComponent } from './service/my-bookings/my-bookings.component';
+import { MyJobsComponent } from './service/my-jobs/my-jobs.component';
+import { UserProfileComponent } from './service/user-profile/user-profile.component';
+import { ShopGuestComponent } from './service/shop-guest/shop-guest.component';
+import { ServiceDetailGuestComponent } from './service/service-detail-guest/service-detail-guest.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'services', component: ServiceShopComponent },
     { path: 'services/:id', component: ServiceDetailComponent },
+    { path: 'serviceguest/:id', component: ServiceDetailGuestComponent },
 
     { path: 'admin/servicetype', component: CategoryListComponent, canActivate: [AuthGuard, adminGuard]},
     { path: 'admin/servicetype/form', component: CategoryFormComponent, canActivate: [AuthGuard, adminGuard]},
 
     { path: 'shop', component: ServiceShopComponent },
+    { path: 'shopguest', component: ShopGuestComponent },
     { path: 'myservices', component: MyServicesComponent },
 
     { path: 'myservices/form', component: ServiceFormComponent },
 
-    { path: '**', redirectTo: '' }
+    // Booked Offers and Offers Booked
+    { path: 'mybookings', component: MyBookingsComponent },
+    { path: 'myjobs', component: MyJobsComponent },
+
+    // User name change
+    { path: 'user', component: UserProfileComponent }
+
 ];
 
 @NgModule({

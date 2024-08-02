@@ -21,10 +21,26 @@
             <a (click)="onHamburgerItemClick()" routerLink="/" routerLinkActive="active"
                [routerLinkActiveOptions]="{ exact: true }" class="block py-2 pr-4 pl-3 rounded ">Home</a>
           </li>
+          <li>
+            <a (click)="onHamburgerItemClick()" routerLink="/shop" routerLinkActive="active"
+               [routerLinkActiveOptions]="{exact: true}" class="block py-2 pr-4 pl-3 rounded">Shop</a>
+          </li>
           @if(isAuthenticated()) {
             <li>
               <a (click)="onHamburgerItemClick()" routerLink="/myservices" routerLinkActive="active"
                [routerLinkActiveOptions]="{ exact: true }" class="block py-2 pr-4 pl-3 rounded ">My services</a>
+            </li>
+            <li>
+              <a (click)="onHamburgerItemClick()" routerLink="/mybookings" routerLinkActive="active"
+                 [routerLinkActiveOptions]="{ exact: true }" class="block py-2 pr-4 pl-3 rounded">My Bookings</a>
+            </li>
+            <li>
+              <a (click)="onHamburgerItemClick()" routerLink="/myjobs" routerLinkActive="active"
+                 [routerLinkActiveOptions]="{ exact: true }" class="block py-2 pr-4 pl-3 rounded">My Jobs</a>
+            </li>
+            <li>
+              <a (click)="onHamburgerItemClick()" routerLink="/user" routerLinkActive="active"
+                 [routerLinkActiveOptions]="{ exact: true }" class="block py-2 pr-4 pl-3 rounded">Profile</a>
             </li>
           } @else {
             <li>

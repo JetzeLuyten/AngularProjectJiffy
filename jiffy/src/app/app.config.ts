@@ -23,7 +23,11 @@ export const appConfig: ApplicationConfig = {
         redirect_uri: environment.redirectUri
       },
       httpInterceptor: {
-        allowedList: [`${environment.api_url}/services`, `${environment.api_url}/trip/*`]
+        allowedList: [{ uri: `${environment.api_url}/user/*` },
+          { uri: `${environment.api_url}/booking*` },
+          { uri: `${environment.api_url}/servicetype/*` },
+          { uri: `${environment.api_url}/user` },
+          { uri: `${environment.api_url}/booking` },]
       }
     }), provideAnimationsAsync(),
   ]

@@ -13,6 +13,7 @@ namespace JiffyBackend.DAL.Entity
         public string Email { get; set; }
         public string FullName { get; set; }
         public ICollection<Service> Services { get; set; } = new List<Service>();
+        public ICollection<Booking> Bookings { get; set; }
         // Add other fields as necessary
     }
 }

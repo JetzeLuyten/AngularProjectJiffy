@@ -37,7 +37,7 @@ namespace JiffyBackend.DAL.Initializer
                 var users = new User[]
                 {
                     new User { Auth0UserId = "auth0|66a5163b7686a649a4dbc971", Email = "Emailski", FullName = "Jetze L" },
-                    new User { Auth0UserId = "auth0|dummyuser2", Email = "Emailski", FullName = "Dummy User 2" }
+                    new User { Auth0UserId = "auth0|google-oauth2|108034703800733846612", Email = "luytenjetze@gmail.com", FullName = "Jetze luyten" }
                 };
 
                 context.Users.AddRange(users);
@@ -50,24 +50,63 @@ namespace JiffyBackend.DAL.Initializer
                 {
                     new Service
                     {
-                        Title = "Service 1",
+                        Title = "IT-consultant wanted!",
                         ServiceTypeId = context.ServiceTypes.FirstOrDefault(st => st.Name == "Consulting")?.Id ?? 1,
-                        Description = "Content for Service 1",
+                        Description = "Need an IT-consultant to help me realize some ideas!",
                         UserId = context.Users.FirstOrDefault(u => u.FullName == "Jetze L")?.Id ?? 3,
                         PublishDate = DateTime.UtcNow
                     },
                     new Service
                     {
-                        Title = "Service 2",
-                        ServiceTypeId = context.ServiceTypes.FirstOrDefault(st => st.Name == "Design") ?.Id ?? 2,
-                        Description = "Content for Offer 2",
-                        UserId = context.Users.FirstOrDefault(u => u.FullName == "Dummy User 2")?.Id ?? 2,
+                        Title = "Car Washing and Detailing",
+                        ServiceTypeId = context.ServiceTypes.FirstOrDefault(ot => ot.Name == "Fixed Price")?.Id ?? 1,
+                        Description = "Our thorough car washing and detailing service will make your vehicle shine inside and out. Includes exterior wash, interior vacuuming, and a full wax treatment.",
+                        UserId = context.Users.FirstOrDefault(u => u.FullName == "Jetze luyten")?.Id ?? 2,
+                        PublishDate = DateTime.UtcNow
+                    },
+                    new Service
+                    {
+                        Title = "Pet Sitting and Dog Walking",
+                        ServiceTypeId = context.ServiceTypes.FirstOrDefault(ot => ot.Name == "Volunteer")?.Id ?? 2,
+                        Description = "Need someone to look after your pets while you're away? Our pet sitting service includes daily walks, feeding, and lots of playtime. Great for busy pet owners!",
+                        UserId = context.Users.FirstOrDefault(u => u.FullName == "Jetze luyten")?.Id ?? 2,
+                        PublishDate = DateTime.UtcNow
+                    },
+                    new Service
+                    {
+                        Title = "Grocery Shopping Assistance",
+                        ServiceTypeId = context.ServiceTypes.FirstOrDefault(ot => ot.Name == "Volunteer")?.Id ?? 2,
+                        Description = "If you're unable to go grocery shopping yourself, our service can help. We’ll take your shopping list and deliver the groceries to your door.",
+                        UserId = context.Users.FirstOrDefault(u => u.FullName == "Jetze L")?.Id ?? 2,
                         PublishDate = DateTime.UtcNow
                     }
                 };
 
                 context.Services.AddRange(services);
                 context.SaveChanges();
+
+                if (!context.Bookings.Any())
+                {
+                    var adminUserId = context.Users.FirstOrDefault(u => u.FullName == "The Admin")?.Id;
+                    var serviceId = context.Services.FirstOrDefault(o => o.Title == "Service 2")?.Id;
+
+                    if (adminUserId.HasValue && serviceId.HasValue)
+                    {
+                        var bookings = new List<Booking>
+                    {
+                        new Booking
+                        {
+                            BookerId = adminUserId.Value,
+                            ServiceId = serviceId.Value,
+                            BookingTime = DateTime.UtcNow,
+                            Complete = false
+                        }
+                    };
+
+                        context.Bookings.AddRange(bookings);
+                        context.SaveChanges();
+                    }
+                }
             }
         }
     }

@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { ServicesService } from '../../services/service.services';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { UpdateServiceDto } from '../../model/update-ervice.dto';
+import { UpdateServiceDto } from '../../model/update-service.dto';
 import { ServiceType } from '../../model/serviceType';
 import { Router } from '@angular/router';
 import { ServiceTypeService } from '../../services/service-type.service';

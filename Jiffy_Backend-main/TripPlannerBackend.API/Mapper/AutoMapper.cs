@@ -19,6 +19,12 @@ namespace JiffyBackend.API.Mapper
             CreateMap<User, UserDto>();
             CreateMap<CreateUserDto, User>();
             CreateMap<UpdateUserDto, User>();
+
+            CreateMap<Booking, BookingDto>()
+                .ForMember(dest => dest.Booker, opt => opt.MapFrom(src => src.Booker))
+                .ForMember(dest => dest.Service, opt => opt.MapFrom(src => src.Service));
+
+            CreateMap<CreateBookingDto, Booking>();
         }
     }
 }

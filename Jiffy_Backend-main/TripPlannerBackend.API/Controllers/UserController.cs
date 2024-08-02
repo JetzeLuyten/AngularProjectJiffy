@@ -25,10 +25,16 @@ namespace JiffyBackend.API.Controllers
             return Ok(_mapper.Map<IEnumerable<UserDto>>(users));
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetUser(int id)
+        [HttpGet("{authId}")]
+        public async Task<ActionResult<UserDto>> GetUser(string authId)
         {
-            var user = await _context.Users.FindAsync(id);
+            if (string.IsNullOrEmpty(authId))
+            {
+                return BadRequest("Auth ID cannot be null or empty.");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Auth0UserId == authId);
+
             if (user == null)
             {
                 return NotFound();
@@ -50,23 +56,33 @@ namespace JiffyBackend.API.Controllers
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, _mapper.Map<UserDto>(user));
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateUser(int id, [FromBody] UpdateUserDto updateUserDto)
+        [HttpPut("{authId}")]
+        public async Task<ActionResult> UpdateUserProfile(string authId, [FromBody] UpdateUserDto updates)
         {
-            if (id != updateUserDto.Id)
+            if (string.IsNullOrEmpty(authId))
             {
-                return BadRequest();
+                return BadRequest("Auth ID cannot be null or empty!");
             }
 
-            var user = await _context.Users.FindAsync(id);
+            if (updates == null)
+            {
+                return BadRequest("Update data cannot be null.");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Auth0UserId == authId);
+
             if (user == null)
             {
                 return NotFound();
             }
 
-            _mapper.Map(updateUserDto, user);
-            _context.Entry(user).State = EntityState.Modified;
+            if (!string.IsNullOrEmpty(updates.FullName))
+            {
+                user.FullName = updates.FullName;
+            }
+
             await _context.SaveChangesAsync();
+
             return NoContent();
         }
 

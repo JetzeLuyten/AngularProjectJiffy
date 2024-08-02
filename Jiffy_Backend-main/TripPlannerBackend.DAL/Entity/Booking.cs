@@ -9,6 +9,11 @@ namespace JiffyBackend.DAL.Entity
     public class Booking
     {
         public int Id { get; set; }
-        public bool IsComplete { get; set; }
+        public int BookerId { get; set; }
+        public User Booker { get; set; }
+        public int ServiceId { get; set; }
+        public Service Service { get; set; }
+        public DateTime BookingTime { get; set; }
+        public bool Complete { get; set; }
     }
 }

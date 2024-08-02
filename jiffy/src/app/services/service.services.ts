@@ -5,7 +5,7 @@ import { Service } from '../model/service';
 import { environment } from '../../environments/environment.development';
 import { AuthServices } from './auth.service';
 import { AuthService } from '@auth0/auth0-angular';
-import { UpdateServiceDto } from '../model/update-ervice.dto';
+import { UpdateServiceDto } from '../model/update-service.dto';
 import { CreateServiceDto } from '../model/create-service.dto';
 
 

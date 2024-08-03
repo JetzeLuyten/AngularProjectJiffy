@@ -70,7 +70,7 @@ namespace JiffyBackend.API.Controllers
         }
 
         [HttpGet("myjobs/{authId}")]
-        public async Task<ActionResult<IEnumerable<BookingDto>>> GetMyAgenda(string authId)
+        public async Task<ActionResult<IEnumerable<BookingDto>>> GetMyJobs(string authId)
         {
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Auth0UserId == authId);
             if (user == null)

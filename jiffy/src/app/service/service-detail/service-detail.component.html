@@ -20,7 +20,16 @@
   </div>
 
   <!-- Conditionally display the "Book Offer" button -->
-  <div *ngIf="!isGuest">
-    <button class="book-service-button" (click)="bookService()">Book Offer</button>
-  </div>
+  <div>
+    <button
+        [disabled]="hasActiveBooking"
+        [ngClass]="{
+            'bg-blue-500 hover:bg-blue-700': !hasActiveBooking,
+            'bg-gray-500': hasActiveBooking,
+            'text-white font-bold py-2 px-4 rounded': true
+        }"
+        (click)="bookService()">
+        {{ hasActiveBooking ? 'Already Booked' : 'Book Offer' }}
+    </button>
+</div>
 </div>

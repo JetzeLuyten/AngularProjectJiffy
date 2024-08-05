@@ -43,6 +43,7 @@ export class ServicesService {
   }
 
   deleteService(id: number): Observable<void> {
+    console.log(id);
     return this.httpClient.delete<void>(`${this.apiUrl}/service/${id}`);
   }
 }

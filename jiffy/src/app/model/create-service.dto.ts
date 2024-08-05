@@ -4,4 +4,5 @@ export interface CreateServiceDto {
     serviceTypeId: number;
     userId: string;
     publishDate: Date;
+    price: number;
   }

@@ -10,4 +10,5 @@ export interface Service{
     userId: number;
     user: User;
     publishDate: string;
+    price: number;
 }

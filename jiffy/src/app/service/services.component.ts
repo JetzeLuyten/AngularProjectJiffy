@@ -8,6 +8,7 @@ import { AuthService } from '@auth0/auth0-angular';
 import { LoginComponent } from "../auth0/login/login.component";
 import { BookingService } from '../services/booking.service';
 import { CreateBooking } from '../model/create-booking.dto';
+import { ServicesService } from '../services/service.services';
 
 @Component({
   selector: 'app-services',
@@ -18,7 +19,7 @@ import { CreateBooking } from '../model/create-booking.dto';
 })
 export class ServicesComponent {
   @Input() service: Service = { id: 0, title: "", serviceTypeId: 0, serviceType: {id: 0, name: ""}, description: "", userId: 0, 
-  user: {id: 0, auth0UserId: "", email: "", fullName: ""}, publishDate: ""  };
+  user: {id: 0, auth0UserId: "", email: "", fullName: ""}, publishDate: "", price: 0  };
   @Input() isDetail: boolean = false;
   @Input() isShop: boolean = false;
   userId: string | null = null;
@@ -26,7 +27,7 @@ export class ServicesComponent {
 
   isAuthenticated: boolean = false;
 
-  constructor(private router: Router, private location: Location, private auth: AuthService, private bookingService: BookingService) { }
+  constructor(private router: Router, private location: Location, private auth: AuthService, private bookingService: BookingService, private servicesService: ServicesService) { }
 
   ngOnInit(): void {
     this.auth.isAuthenticated$.subscribe(isAuthenticated => {
@@ -72,6 +73,19 @@ export class ServicesComponent {
       });
 
     }
+  }
+
+  deleteService(id: number) {
+    this.servicesService.deleteService(id).subscribe(
+      () => {
+        // Handle success (e.g., remove the item from the local list)
+        console.log('Service deleted successfully');
+      },
+      error => {
+        // Handle error
+        console.error('Error deleting service', error);
+      }
+    );
   }
 
   checkActiveBooking() {

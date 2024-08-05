@@ -8,6 +8,6 @@ namespace JiffyBackend.API.Dto
         public int BookerId { get; set; }
         public int ServiceId { get; set; }
         public DateTime BookingTime { get; set; }
-        public bool IsComplete { get; set; }
+        public bool Completed { get; set; }
     }
 }

@@ -9,5 +9,6 @@ namespace JiffyBackend.API.Dto
         public int ServiceTypeId { get; set; }
         public string UserId { get; set; }
         public DateTime PublishDate { get; set; }
+        public float Price { get; set; }
     }
 }

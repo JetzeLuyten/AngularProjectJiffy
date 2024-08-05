@@ -17,7 +17,7 @@ import { AuthService } from '@auth0/auth0-angular';
 })
 export class ServiceDetailComponent implements OnInit {
   service: Service = { id: 0, title: "", serviceTypeId: 0, serviceType: {id: 0, name: ""}, description: "", publishDate: '', 
-  userId: 0, user: {id: 0, auth0UserId: "", email: "", fullName: ""}};
+  userId: 0, user: {id: 0, auth0UserId: "", email: "", fullName: ""}, price: 0};
   userId: string | null = null;
   hasActiveBooking: boolean = false;
 

@@ -32,7 +32,8 @@ export class ServiceFormComponent implements OnInit, OnDestroy {
     description: "", 
     userId: 0, 
     user: { id: 0, auth0UserId: "", email: "", fullName: ""}, 
-    publishDate: "" 
+    publishDate: "",
+    price: 0 
   };
 
   serviceTypes: ServiceType[] = [];
@@ -94,7 +95,8 @@ export class ServiceFormComponent implements OnInit, OnDestroy {
             description: this.service.description,
             serviceTypeId: this.service.serviceTypeId,
             userId: user.sub, // Set the user ID
-            publishDate: new Date() // Set the current date and time as the publishing date
+            publishDate: new Date(), // Set the current date and time as the publishing date
+            price: this.service.price
           };
 
           this.postService$ = this.serviceService.createService(createServiceDto).subscribe({

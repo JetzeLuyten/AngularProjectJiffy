@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { LoginComponent } from "../../auth0/login/login.component";
@@ -7,7 +7,6 @@ import { SignupComponent } from '../../auth0/signup/signup.component';
 import { NavbarComponent } from "../navbar/navbar.component";
 import { RoleService } from '../../services/role.service';
 import { LogoutComponent } from "../../auth0/logout/logout.component";
-import { AuthServices} from "../../services/auth.service"
 
 @Component({
   selector: 'app-menu',
@@ -16,14 +15,13 @@ import { AuthServices} from "../../services/auth.service"
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit{
   isAuthenticated = signal(false);
   isAdmin = signal(false);
-  user$ = this.auth.user$;
+  user$ = this.authService.user$;
   userName: string | undefined;
-  userId: string | null = null;
 
-  constructor(private router: Router, private authService: AuthService, public roleService: RoleService, private authServices: AuthServices, private auth: AuthService) {
+  constructor(private router: Router, private authService: AuthService, public roleService: RoleService) {
     this.authService.isAuthenticated$.subscribe((auth) => {
       this.isAuthenticated.set(auth)
     });

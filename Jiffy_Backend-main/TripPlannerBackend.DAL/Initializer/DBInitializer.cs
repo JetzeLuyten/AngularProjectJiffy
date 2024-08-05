@@ -24,7 +24,9 @@ namespace JiffyBackend.DAL.Initializer
                 {
                     new ServiceType { Name = "Consulting" },
                     new ServiceType { Name = "Lawnmowing" },
-                    new ServiceType { Name = "Babysitting" }
+                    new ServiceType { Name = "Babysitting" },
+                    new ServiceType { Name = "Carwashing" },
+                    new ServiceType { Name = "Assistance" }
                 };
 
                 context.ServiceTypes.AddRange(serviceTypes);
@@ -37,7 +39,7 @@ namespace JiffyBackend.DAL.Initializer
                 var users = new User[]
                 {
                     new User { Auth0UserId = "auth0|66a5163b7686a649a4dbc971", Email = "Emailski", FullName = "Jetze L" },
-                    new User { Auth0UserId = "auth0|google-oauth2|108034703800733846612", Email = "luytenjetze@gmail.com", FullName = "Jetze luyten" }
+                    new User { Auth0UserId = "google-oauth2|108034703800733846612", Email = "luytenjetze@gmail.com", FullName = "Jetze luyten" }
                 };
 
                 context.Users.AddRange(users);
@@ -54,31 +56,35 @@ namespace JiffyBackend.DAL.Initializer
                         ServiceTypeId = context.ServiceTypes.FirstOrDefault(st => st.Name == "Consulting")?.Id ?? 1,
                         Description = "Need an IT-consultant to help me realize some ideas!",
                         UserId = context.Users.FirstOrDefault(u => u.FullName == "Jetze L")?.Id ?? 3,
-                        PublishDate = DateTime.UtcNow
+                        PublishDate = DateTime.UtcNow,
+                        Price = 10
                     },
                     new Service
                     {
                         Title = "Car Washing and Detailing",
-                        ServiceTypeId = context.ServiceTypes.FirstOrDefault(ot => ot.Name == "Fixed Price")?.Id ?? 1,
+                        ServiceTypeId = context.ServiceTypes.FirstOrDefault(ot => ot.Name == "Carwashing")?.Id ?? 4,
                         Description = "Our thorough car washing and detailing service will make your vehicle shine inside and out. Includes exterior wash, interior vacuuming, and a full wax treatment.",
                         UserId = context.Users.FirstOrDefault(u => u.FullName == "Jetze luyten")?.Id ?? 2,
-                        PublishDate = DateTime.UtcNow
+                        PublishDate = DateTime.UtcNow,
+                        Price = 20
                     },
                     new Service
                     {
                         Title = "Pet Sitting and Dog Walking",
-                        ServiceTypeId = context.ServiceTypes.FirstOrDefault(ot => ot.Name == "Volunteer")?.Id ?? 2,
+                        ServiceTypeId = context.ServiceTypes.FirstOrDefault(ot => ot.Name == "Babysitting")?.Id ?? 3,
                         Description = "Need someone to look after your pets while you're away? Our pet sitting service includes daily walks, feeding, and lots of playtime. Great for busy pet owners!",
                         UserId = context.Users.FirstOrDefault(u => u.FullName == "Jetze luyten")?.Id ?? 2,
-                        PublishDate = DateTime.UtcNow
+                        PublishDate = DateTime.UtcNow,
+                        Price = 30
                     },
                     new Service
                     {
                         Title = "Grocery Shopping Assistance",
-                        ServiceTypeId = context.ServiceTypes.FirstOrDefault(ot => ot.Name == "Volunteer")?.Id ?? 2,
+                        ServiceTypeId = context.ServiceTypes.FirstOrDefault(ot => ot.Name == "Assistance")?.Id ?? 5,
                         Description = "If you're unable to go grocery shopping yourself, our service can help. We’ll take your shopping list and deliver the groceries to your door.",
                         UserId = context.Users.FirstOrDefault(u => u.FullName == "Jetze L")?.Id ?? 2,
-                        PublishDate = DateTime.UtcNow
+                        PublishDate = DateTime.UtcNow,
+                        Price = 25
                     }
                 };
 

@@ -12,7 +12,6 @@ import { ServiceFormComponent } from './service/service-form/service-form.compon
 import { MyServicesComponent } from './service/my-services/my-services.component';
 import { MyBookingsComponent } from './service/my-bookings/my-bookings.component';
 import { MyJobsComponent } from './service/my-jobs/my-jobs.component';
-import { UserProfileComponent } from './service/user-profile/user-profile.component';
 import { ShopGuestComponent } from './service/shop-guest/shop-guest.component';
 import { ServiceDetailGuestComponent } from './service/service-detail-guest/service-detail-guest.component';
 
@@ -35,9 +34,7 @@ export const routes: Routes = [
     { path: 'mybookings', component: MyBookingsComponent },
     { path: 'myjobs', component: MyJobsComponent },
 
-    // User name change
-    { path: 'user', component: UserProfileComponent }
-
+    { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

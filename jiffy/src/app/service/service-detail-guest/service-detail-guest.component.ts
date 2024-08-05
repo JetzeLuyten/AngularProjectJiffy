@@ -14,7 +14,8 @@ import { ServicesService } from '../../services/service.services';
   styleUrls: ['./service-detail-guest.component.css']
 })
 export class ServiceDetailGuestComponent implements OnInit {
-  service: Service = { id: 0, title: "", serviceTypeId: 0, serviceType: { id: 0, name: ""}, description: "", userId: 0, user: {id: 0, auth0UserId: "", email: "", fullName: ""}, publishDate: ""};
+  service: Service = { id: 0, title: "", serviceTypeId: 0, serviceType: { id: 0, name: ""}, description: "", 
+  userId: 0, user: {id: 0, auth0UserId: "", email: "", fullName: ""}, publishDate: "", price: 0};
 
   @Input() isGuest: boolean = false; // Flag to determine if the view is for a guest
   

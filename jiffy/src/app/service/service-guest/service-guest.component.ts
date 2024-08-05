@@ -13,7 +13,8 @@ import { DateFormatPipe } from '../../date-format.pipe';
   styleUrls: ['./service-guest.component.css']
 })
 export class ServiceGuestComponent {
-  @Input() service: Service = { id: 0, title: "", serviceTypeId: 0, serviceType: { id: 0, name: ""}, description: "", userId: 0, user: {id: 0, auth0UserId: "", email: "", fullName: ""}, publishDate: ""};
+  @Input() service: Service = { id: 0, title: "", serviceTypeId: 0, serviceType: { id: 0, name: ""}, description: "", 
+  userId: 0, user: {id: 0, auth0UserId: "", email: "", fullName: ""}, publishDate: "", price: 0};
   @Input() isDetail: boolean = false;
 
   constructor(private router: Router) {}

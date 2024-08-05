@@ -13,5 +13,6 @@ namespace JiffyBackend.DAL.Entity
         public User User { get; set; }
         public DateTime PublishDate { get; set; }
         public List<Booking> Bookings { get; set; } = new List<Booking>();
+        public float Price { get; set; }
     }
 }

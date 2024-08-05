@@ -10,6 +10,6 @@ namespace JiffyBackend.API.Dto
         public int ServiceId { get; set; }
         public ServiceDto Service { get; set; }
         public DateTime BookingTime { get; set; }
-        public bool Complete { get; set; }
+        public bool Completed { get; set; }
     }
 }

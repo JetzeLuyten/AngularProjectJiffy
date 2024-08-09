@@ -26,10 +26,12 @@
                 (click)="bookService()">
                 {{ hasActiveBooking ? 'Already Booked' : 'Book Offer' }}
             </button>
+            @if (isAdmin()) {
             <button class="bg-red-500 text-white py-2 px-4 rounded"
                     (click)="deleteService(service.id)">
                 Delete service
             </button>
+        }
         </div>
     </div>
     <footer class="mt-4 text-gray-600">

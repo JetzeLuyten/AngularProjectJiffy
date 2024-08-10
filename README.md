@@ -1,3 +1,4 @@
 # Jiffy Services
-Om de frontend te laten runnen, moet je de environments aanpassen (zowel environment.ts als environment.development.ts). Deze is te vinden in jiffy/src/environments.
-De backend kan u veranderen door naar backendJiffy/Jiffy_Backend-main te gaan.
+Om de Angular frontend te runnen: 'npm start' commando doen bij de jiffy folder
+
+Om de .net backend te runnen: zorg dat het startup project van boven TripPlannerBackend.API is. (ik heb de naam vergeten te veranderen omdat die gebaseerd is op de voorbeeld backend)

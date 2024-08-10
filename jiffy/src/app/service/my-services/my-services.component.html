@@ -24,6 +24,9 @@
               <th class="px-6 py-3 text-xs font-medium text-left text-gray-500 border-b border-gray-200 bg-gray-50">
                 Description
               </th>
+              <th class="px-6 py-3 text-xs font-medium text-left text-gray-500 border-b border-gray-200 bg-gray-50">
+                Price
+              </th>
               <th class="px-6 py-3 text-xs text-center text-gray-500 border-b border-gray-200 bg-gray-50">
                 &nbsp;
               </th>
@@ -41,6 +44,9 @@
               </td>
               <td class="px-6 py-4 border-b border-gray-200">
                 <div class="text-sm text-gray-900">{{ service.description | shortenContent:20 }}</div>
+              </td>
+              <td class="px-6 py-4 border-b border-gray-200">
+                <div class="text-sm text-gray-900">€{{ service.price }}</div>
               </td>
               <td class="text-sm font-medium border-b border-gray-200">
                 <div class="flex justify-end gap-4">

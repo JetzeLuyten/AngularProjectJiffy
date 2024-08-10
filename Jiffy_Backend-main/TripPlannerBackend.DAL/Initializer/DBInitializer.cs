@@ -45,7 +45,7 @@ namespace JiffyBackend.DAL.Initializer
                 context.Users.AddRange(users);
                 context.SaveChanges();
             }
-            
+
             if (!context.Services.Any())
             {
                 var services = new List<Service>

@@ -4,7 +4,8 @@
          [ngClass]="{'border-green-500 border-2': booking.complete}">
       <div>
         <h3 class="text-xl font-semibold">{{ booking.service.title }}</h3>
-        <p class="text-gray-600">Offer Type: {{ booking.service.serviceType.name }}</p>
+        <p class="text-gray-600">Offer Type: €{{ booking.service.price.toFixed(2) }}</p>
+        <p class="text-gray-600">Service Type: {{ booking.service.serviceType.name }}</p>
         <p class="text-gray-600">Description: {{ booking.service.description | shortenContent }}</p>
         <p class="text-gray-600">Booking Time: {{ booking.bookingTime | dateFormat}}</p>
         <p class="text-gray-600">Mercenary: {{ booking.service.user.fullName || 'Unknown' }}</p>
